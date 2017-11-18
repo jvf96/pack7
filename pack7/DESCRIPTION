@@ -1,0 +1,24 @@
+Package: pack7
+Type: Package
+Title: Introduction to machine learning in R
+Version: 1.0
+Date: 2017-10-20
+Authors@R: c(
+    person("Jorge", "Villar Fuentes", email = "jorvi903@student.liu.se", role = "cre"),
+    person("Ashmaful", "Alam", email = "ashas926@student.liu.se", role = "aut"))
+Maintainer: Jorge Villar Fuentes <jorgevillarfuentes@hotmail.com>
+Description: This function it should take a formula object as well as a dataset and return a ridgereg object.
+License: GPL-2
+Imports: methods, stats
+RoxygenNote: 6.0.1
+Suggests: testthat,
+    MASS,
+    nycflights13,
+    dplyr,
+    ggplot2,
+    knitr,
+    rmarkdown,
+    caret,
+    mlbench,
+    statPack
+VignetteBuilder: knitr
