@@ -37,21 +37,8 @@ vignette: >
 
 OUT:
 
-Linear Regression 
-
-381 samples
-
- 13 predictor
-
-No pre-processing
-
-Resampling: Bootstrapped (25 reps) 
-
-Summary of sample sizes: 381, 381, 381, 381, 381, 381, ... 
-
-Resampling results:
-
-  RMSE     Rsquared   MAE   
+  RMSE     Rsquared   MAE  
+  
   4.83013  0.7341992  3.389092
   
 
@@ -62,22 +49,6 @@ Resampling results:
     linearregresion2
 
 OUT:
-
-Linear Regression with Forward Selection 
-
-381 samples
-
- 13 predictor
- 
-
-No pre-processing
-
-Resampling: Bootstrapped (25 reps) 
-
-Summary of sample sizes: 381, 381, 381, 381, 381, 381, ... 
-
-Resampling results across tuning parameters:
-
 
   nvmax  RMSE      Rsquared   MAE     
   
@@ -95,25 +66,41 @@ The model with leapforward method is better in RMSE and MAE than the lm method.
 
 4. Fit a ridge regression model using your ridgereg() function to the training dataset for diﬀerent values of λ.
 
+
+
     ridge <- list(type = "Regression",library = "statPack",loop = NULL, prob = NULL)
     ridge$parameters <- data.frame(parameter ="lambda", class = "numeric", label = "lambda")
     ridge$grid <- function(y, x, len = NULL, search = "grid"){
       data.frame(lambda = c(0.1, 0.5, 1, 2))
+      
     }
     ridge$fit <- function(x, y, wts, param, lev, last, classProbs, ...){
       dat <- if(is.data.frame(x))
+      
       x
+      
       else as.data.frame(x)
+      
       dat$.outcome <- y
+      
       out <- ridgereg$new(.outcome~., data = dat, lambda = param$lambda, ...)
+      
       out
+      
     }
     ridge$predict <- function(modelFit, newdata, submodels = NULL){
       if(!is.data.frame(newdata))
+      
          newdata <- as.data.frame(newdata)
+         
       newdata[,apply(newdata, MARGIN=2, sd)!=0] <- scale(newdata[aplly(newdata, MARGIN=2, sd)!=0])
+      
       modelFit$predict(newdata)
+      
     }
+    
+    
+    
 
 5. Find the best hyperparameter value for λ using 10-fold cross-validation on the training set. 
 
@@ -127,34 +114,40 @@ The best hyperparameter value for lambda is 0.
 
 
     lm method:
-    
+
+
 
     test_lm <- predict(linearregresion1, test)
     postResample(test_lm, test$tax)
     
     
+    
     OUT:
     
-           RMSE    Rsquared         MAE 
-429.9725950   0.2858369 394.4207493
-
-
+    RMSE = 429.9725950   Rsquared = 0.2858369        MAE = 394.4207493 
+    
+    
     leapForward method:
+
+
 
     test_lmf <- predict(linearregresion2, test)
     postResample(test_lmf, test$tax)
     
     
+    
     OUT:
     
-     RMSE    Rsquared         MAE 
-429.6963613   0.2246595 394.4178098
-    
+    RMSE = 429.6963613   Rsquared  = 0.2246595       MAE = 394.4178098 
     
     ridgereg method:
 
-    test_ridge <- predict(ridge, test)
-    postResample(test_ridge, test$tax)
 
-The best model is the lm method model, but the leapForward method have the same value.
+
+    test_ridge <- predict(ridge, test)
+    postResample(test_ridge, test$tax)`
+
+
+
+The best model is the lm method model, but the leapForward method have the same values.
 

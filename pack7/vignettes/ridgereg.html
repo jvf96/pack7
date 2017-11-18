@@ -57,27 +57,13 @@ test &lt;-Boston_Housing[-partition,]</code></pre>
 linearregresion1 &lt;- caret::train(medv~.,data=training, method=&quot;lm&quot;)
 linearregresion1</code></pre>
 <p>OUT:</p>
-<p>Linear Regression</p>
-<p>381 samples</p>
-<p>13 predictor</p>
-<p>No pre-processing</p>
-<p>Resampling: Bootstrapped (25 reps)</p>
-<p>Summary of sample sizes: 381, 381, 381, 381, 381, 381, …</p>
-<p>Resampling results:</p>
-<p>RMSE Rsquared MAE<br />
-4.83013 0.7341992 3.389092</p>
+<p>RMSE Rsquared MAE</p>
+<p>4.83013 0.7341992 3.389092</p>
 <p>WITH leapForward method:</p>
 <pre><code>set.seed(1996)
 linearregresion2 &lt;- caret::train(medv~.,data=training, method=&quot;leapForward&quot;)
 linearregresion2</code></pre>
 <p>OUT:</p>
-<p>Linear Regression with Forward Selection</p>
-<p>381 samples</p>
-<p>13 predictor</p>
-<p>No pre-processing</p>
-<p>Resampling: Bootstrapped (25 reps)</p>
-<p>Summary of sample sizes: 381, 381, 381, 381, 381, 381, …</p>
-<p>Resampling results across tuning parameters:</p>
 <p>nvmax RMSE Rsquared MAE</p>
 <p>2 5.450106 0.6606228 3.905948</p>
 <p>3 5.069825 0.7044483 3.581014</p>
@@ -88,7 +74,18 @@ linearregresion2</code></pre>
 <p>The model with leapforward method is better in RMSE and MAE than the lm method.</p>
 <ol start="4" style="list-style-type: decimal">
 <li><p>Fit a ridge regression model using your ridgereg() function to the training dataset for diﬀerent values of λ.</p>
-<p>ridge &lt;- list(type = “Regression”,library = “statPack”,loop = NULL, prob = NULL) ridge<span class="math inline">\(parameters &lt;- data.frame(parameter =&quot;lambda&quot;, class = &quot;numeric&quot;, label = &quot;lambda&quot;) ridge\)</span>grid &lt;- function(y, x, len = NULL, search = “grid”){ data.frame(lambda = c(0.1, 0.5, 1, 2)) } ridge<span class="math inline">\(fit &lt;- function(x, y, wts, param, lev, last, classProbs, ...){  dat &lt;- if(is.data.frame(x))  x  else as.data.frame(x)  dat\)</span>.outcome &lt;- y out &lt;- ridgereg<span class="math inline">\(new(.outcome~., data = dat, lambda = param\)</span>lambda, …) out } ridge<span class="math inline">\(predict &lt;- function(modelFit, newdata, submodels = NULL){  if(!is.data.frame(newdata))  newdata &lt;- as.data.frame(newdata)  newdata[,apply(newdata, MARGIN=2, sd)!=0] &lt;- scale(newdata[aplly(newdata, MARGIN=2, sd)!=0])  modelFit\)</span>predict(newdata) }</p></li>
+<p>ridge &lt;- list(type = “Regression”,library = “statPack”,loop = NULL, prob = NULL) ridge<span class="math inline">\(parameters &lt;- data.frame(parameter =&quot;lambda&quot;, class = &quot;numeric&quot;, label = &quot;lambda&quot;) ridge\)</span>grid &lt;- function(y, x, len = NULL, search = “grid”){ data.frame(lambda = c(0.1, 0.5, 1, 2))</p>
+<p>} ridge$fit &lt;- function(x, y, wts, param, lev, last, classProbs, …){ dat &lt;- if(is.data.frame(x))</p>
+<p>x</p>
+<p>else as.data.frame(x)</p>
+<p>dat$.outcome &lt;- y</p>
+<p>out &lt;- ridgereg<span class="math inline">\(new(.outcome~., data = dat, lambda = param\)</span>lambda, …)</p>
+<p>out</p>
+<p>} ridge$predict &lt;- function(modelFit, newdata, submodels = NULL){ if(!is.data.frame(newdata))</p>
+<pre><code> newdata &lt;- as.data.frame(newdata)</code></pre>
+<p>newdata[,apply(newdata, MARGIN=2, sd)!=0] &lt;- scale(newdata[aplly(newdata, MARGIN=2, sd)!=0])</p>
+<p>modelFit$predict(newdata)</p>
+<p>}</p></li>
 <li><p>Find the best hyperparameter value for λ using 10-fold cross-validation on the training set.</p>
 <p>control &lt;- trainControl(method = “repeatedcv”, number =10, repeats = 10) ridge &lt;- train(tax~., data = training, method = ridge, trControl = control) ridge</p></li>
 </ol>
@@ -98,16 +95,15 @@ linearregresion2</code></pre>
 <p>lm method:</p>
 <p>test_lm &lt;- predict(linearregresion1, test) postResample(test_lm, test$tax)</p>
 <p>OUT:</p>
-<pre><code>   RMSE    Rsquared         MAE </code></pre>
-<p>429.9725950 0.2858369 394.4207493</p>
+<p>RMSE = 429.9725950 Rsquared = 0.2858369 MAE = 394.4207493</p>
 <p>leapForward method:</p>
 <p>test_lmf &lt;- predict(linearregresion2, test) postResample(test_lmf, test$tax)</p>
 <p>OUT:</p>
-<p>RMSE Rsquared MAE 429.6963613 0.2246595 394.4178098</p>
+<p>RMSE = 429.6963613 Rsquared = 0.2246595 MAE = 394.4178098</p>
 <p>ridgereg method:</p>
-<p>test_ridge &lt;- predict(ridge, test) postResample(test_ridge, test$tax)</p></li>
+<p>test_ridge &lt;- predict(ridge, test) postResample(test_ridge, test$tax)`</p></li>
 </ol>
-<p>The best model is the lm method model, but the leapForward method have the same value.</p>
+<p>The best model is the lm method model, but the leapForward method have the same values.</p>
 
 
 
