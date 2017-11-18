@@ -18,7 +18,7 @@ Suggests: testthat,
     ggplot2,
     knitr,
     rmarkdown,
+    leaps,
     caret,
-    mlbench,
-    statPack
+    mlbench
 VignetteBuilder: knitr
