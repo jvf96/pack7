@@ -3,6 +3,9 @@
 \name{visualize_airport_delays}
 \alias{visualize_airport_delays}
 \title{Visualize airport arrival delays}
+\usage{
+visualize_airport_delays()
+}
 \value{
 a plot
 }
