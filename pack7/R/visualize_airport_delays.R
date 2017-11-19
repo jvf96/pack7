@@ -18,7 +18,7 @@ visualize_airport_delays <- function(){
   ggplot2::ggplot(data_airports, ggplot2::aes(y = data_airports$lat, x = data_airports$lon)) + 
     ggplot2::geom_point(na.rm =TRUE) + ggplot2::theme_gray() + 
     ggplot2::scale_color_gradient(low = "black", high = "#F5F5F5") + 
-    ggplot2::labs(title = "Average arrival delays", subtitle = "Longitude vs. Latitude",
-                  y = "Latitude", x = "Longitude", color = "Arrival delays") + 
+    ggplot2::labs(title = "Flights and Airport", subtitle = "Longitude and Latitude",
+                  y = "Latitude", x = "Longitude") + 
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
 }
