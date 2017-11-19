@@ -1,0 +1,131 @@
+---
+title: "Ridgereg"
+author: "Jorge Villar Fuentes and Ashmaful Alam"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+1.  Divide the BostonHousing data (or your own API data) into a test and training dataset using the caret package.
+
+   First, we run this two library and the data BostonHousing, if you don't have install this packages, you run this: `install.packages("caret")` , `install.packages("mlbench")`
+
+    library(caret)
+    library(statPack)
+    library(mlbench)
+    data(BostonHousing)
+    
+    
+   Now, we divide the data into a test and training datasaset
+
+    Boston_Housing <- BostonHousing
+    partition <- createDataPartition(y = Boston_Housing$medv, p = 0.75, list = FALSE)
+    training <- Boston_Housing[partition,]
+    test <-Boston_Housing[-partition,]
+
+
+2.  Fit a linear regression model and a ﬁt a linear regression model with forward selection of covariates on the training dataset
+
+ WITH lm method:
+
+    set.seed(1996)
+    linearregresion1 <- caret::train(medv~.,data=training, method="lm")
+    linearregresion1
+
+OUT:
+
+  RMSE     Rsquared   MAE  
+  
+  4.83013  0.7341992  3.389092
+  
+
+ WITH leapForward method:
+
+    set.seed(1996)
+    linearregresion2 <- caret::train(medv~.,data=training, method="leapForward")
+    linearregresion2
+
+OUT:
+
+  nvmax  RMSE      Rsquared   MAE     
+  
+  2      5.450106  0.6606228  3.905948
+  
+  3      5.069825  0.7044483  3.581014
+  
+  4      5.073226  0.7042688  3.540375
+
+
+3.  Evaluate the performance of this model on the training dataset.
+
+The model with leapforward method is better in RMSE and MAE than the lm method.
+
+
+4. Fit a ridge regression model using your ridgereg() function to the training dataset for diﬀerent values of λ.
+
+
+```
+    ridge <- list(type = "Regression",library = "pack7",loop = NULL, prob = NULL)
+    ridge$parameters <- data.frame(parameter ="lambda", class = "numeric", label = "lambda")
+    
+    ridge$grid <- function(y, x, len = NULL, search = "grid"){
+      data.frame(lambda = c(0.1, 0.5, 1, 2))
+    }
+    
+    ridge$fit <- function(x, y, wts, param, lev, last, classProbs, ...){
+      dat <- if(is.data.frame(x))
+      x
+      else as.data.frame(x)
+      dat$.outcome <- y
+      out <- ridgereg$new(.outcome~., data = dat, lambda = param$lambda, ...)
+      out
+    }
+    
+    ridge$predict <- function(modelFit, newdata, submodels = NULL){
+      if(!is.data.frame(newdata))
+         newdata <- as.data.frame(newdata)
+      newdata[,apply(newdata, MARGIN=2, sd)!=0] <- scale(newdata[aplly(newdata, MARGIN=2, sd)!=0])
+      modelFit$predict(newdata)
+    }
+```    
+
+5. Find the best hyperparameter value for λ using 10-fold cross-validation on the training set. 
+```
+    control <- trainControl(method = "repeatedcv", number =10, repeats = 10)
+    ridge <- train(tax~., data = training, method = ridge, trControl = control)
+    ridge
+```
+The best hyperparameter value for lambda is 0.
+
+6. Evaluate the performance of all three models on the test dataset and write some concluding comments
+
+
+    lm method:
+```
+    test_lm <- predict(linearregresion1, test)
+    postResample(test_lm, test$tax)
+```  
+    OUT:
+    
+    RMSE = 429.9725950   Rsquared = 0.2858369        MAE = 394.4207493 
+    
+    leapForward method:
+```
+    test_lmf <- predict(linearregresion2, test)
+    postResample(test_lmf, test$tax)
+```    
+    OUT:
+    
+    RMSE = 429.6963613   Rsquared  = 0.2246595       MAE = 394.4178098 
+    
+    ridgereg method:
+```
+    test_ridge <- predict(ridge, test)
+    postResample(test_ridge, test$tax)`
+```
+
+The best model is the lm method model, but the leapForward method have the same values.
+
